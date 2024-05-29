@@ -1,0 +1,15 @@
+projects:
+
+- name: prd
+  dir: terraform/prd
+  workflow: critical0_default_workflow
+  plan:
+
+workflows:
+  critical0_default_workflow:
+    workflow_configuration:
+      on_pull_request_pushed: [digger plan]
+      on_pull_request_closed: [digger unlock]
+      on_commit_to_default: [digger apply]
+
+collect_usage_data: false

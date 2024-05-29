@@ -1,0 +1,27 @@
+name: Terraform (Digger)
+
+on:
+  pull_request:
+    branches: [ "main" ]
+    types: [ closed, opened, synchronize, reopened ]
+  issue_comment:
+    types: [created]
+    if: contains(github.event.comment.body, 'digger')
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: digger run
+        uses: diggerhq/digger@v0.3.27
+        with:
+          no-backend: true
+          setup-aws: true
+          setup-terraform: true
+          aws-access-key-id: ${{ vars.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-central-1
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
